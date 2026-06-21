@@ -1,5 +1,5 @@
-const CACHE_NAME = "sang-penguasa-rasa-v2";
-const ASSETS_CACHE = "sang-penguasa-rasa-assets-v2";
+const CACHE_NAME = "cilokreward-v1";
+const ASSETS_CACHE = "cilokreward-assets-v1";
 
 self.addEventListener("install", () => {
   self.skipWaiting();
@@ -26,7 +26,6 @@ self.addEventListener("fetch", (event) => {
   if (!url.protocol.startsWith("http")) return;
   if (url.origin !== self.location.origin) return;
 
-  // Immutable assets — cache-first
   if (url.pathname.match(/\.(js|css|png|jpg|jpeg|webp|svg|ico|woff2|woff|ttf)(\?.*)?$/)) {
     event.respondWith(
       caches.open(ASSETS_CACHE).then((cache) =>
@@ -42,7 +41,6 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // HTML / pages — network-first, no aggressive caching
   event.respondWith(
     fetch(request)
       .then((response) => {
@@ -60,7 +58,6 @@ self.addEventListener("fetch", (event) => {
   );
 });
 
-// Notify clients when a new version is available
 self.addEventListener("message", (event) => {
   if (event.data === "skip-waiting") {
     self.skipWaiting();

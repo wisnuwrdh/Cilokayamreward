@@ -23,15 +23,15 @@ const calistoga = Calistoga({
 
 export const metadata: Metadata = {
   title: {
-    default: "Sang Penguasa Rasa",
-    template: "%s | Sang Penguasa Rasa",
+    default: "CilokReward",
+    template: "%s | CilokReward",
   },
-  description: "Aplikasi loyalitas pelanggan Sang Penguasa Rasa",
+  description: "Aplikasi loyalitas pelanggan CilokReward",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Sang Penguasa Rasa",
+    title: "CilokReward",
   },
 };
 

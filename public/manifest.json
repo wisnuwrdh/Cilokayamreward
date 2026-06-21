@@ -1,7 +1,7 @@
 {
-  "name": "Sang Penguasa Rasa",
-  "short_name": "Penguasa Rasa",
-  "description": "Aplikasi loyalitas pelanggan Sang Penguasa Rasa",
+  "name": "CilokReward",
+  "short_name": "CilokReward",
+  "description": "Aplikasi loyalitas pelanggan CilokReward",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
