@@ -2,7 +2,7 @@ import { openDB, IDBPDatabase } from 'idb';
 import { Pelanggan } from './types';
 
 const DB_NAME = 'cilok_db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE_NAME = 'pelanggan';
 
 let dbPromise: Promise<IDBPDatabase> | null = null;
@@ -54,7 +54,7 @@ export async function addPelanggan(nama: string, nomorWA: string): Promise<Pelan
     tanggal_daftar: now,
     riwayat_beli: [now],
   };
-  const id = await db.add(STORE_NAME, pelanggan);
+  const id = await db.add(STORE_NAME, JSON.parse(JSON.stringify(pelanggan)));
   return { ...pelanggan, id: id as number };
 }
 

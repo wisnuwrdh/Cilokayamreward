@@ -113,7 +113,8 @@ export default function DetailPelangganPage() {
 
   if (!pelanggan) return null;
 
-  const riwayatTerbalik = [...pelanggan.riwayat_beli].reverse();
+  const riwayatAman = pelanggan.riwayat_beli ?? [];
+  const riwayatTerbalik = [...riwayatAman].reverse();
 
   return (
     <div className="flex flex-col min-h-dvh pb-4">
@@ -152,7 +153,7 @@ export default function DetailPelangganPage() {
             <div className="text-xs text-stone-400 mt-0.5">Reward</div>
           </div>
           <div className="bg-stone-50 rounded-xl p-3">
-            <div className="text-2xl font-bold text-stone-500">{pelanggan.riwayat_beli.length}</div>
+            <div className="text-2xl font-bold text-stone-500">{riwayatAman.length}</div>
             <div className="text-xs text-stone-400 mt-0.5">Kunjungan</div>
           </div>
         </div>
@@ -188,7 +189,7 @@ export default function DetailPelangganPage() {
         </div>
       )}
 
-      {pelanggan.riwayat_beli.length > 0 && (
+      {pelanggan.riwayat_beli && pelanggan.riwayat_beli.length > 0 && (
         <button
           onClick={handleBatalkan}
           disabled={processing}
