@@ -167,6 +167,15 @@ export async function updatePelangganNama(id: number, nama: string): Promise<Pel
   return existing;
 }
 
+export async function updatePelangganNomor(id: number, nomor: string): Promise<Pelanggan> {
+  const db = await getDB();
+  const existing = await db.get(STORE_PELANGGAN, id);
+  if (!existing) throw new Error("Pelanggan tidak ditemukan");
+  existing.nomor_wa = nomor;
+  await db.put(STORE_PELANGGAN, existing);
+  return existing;
+}
+
 export async function deletePelanggan(id: number): Promise<void> {
   const db = await getDB();
   await db.delete(STORE_PELANGGAN, id);

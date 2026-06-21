@@ -8,6 +8,7 @@ import {
   tukarReward,
   batalkanPembelianTerakhir,
   updatePelangganNama,
+  updatePelangganNomor,
   deletePelanggan,
 } from "@/lib/db";
 import type { Pelanggan } from "@/lib/types";
@@ -29,6 +30,8 @@ export default function DetailPelangganPage() {
   const [namaBaru, setNamaBaru] = useState("");
   const [showBatalConfirm, setShowBatalConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showNomor, setShowNomor] = useState(false);
+  const [nomorBaru, setNomorBaru] = useState("");
 
   const loadData = useCallback(async () => {
     try {
@@ -139,6 +142,30 @@ export default function DetailPelangganPage() {
   const handleBukaDelete = () => {
     setShowSettings(false);
     setShowDeleteConfirm(true);
+  };
+
+  const handleBukaNomor = () => {
+    if (!pelanggan) return;
+    setShowSettings(false);
+    setNomorBaru(pelanggan.nomor_wa);
+    setShowNomor(true);
+  };
+
+  const handleNomorSave = async () => {
+    if (!pelanggan || !nomorBaru.trim()) return;
+    setProcessing(true);
+    try {
+      const updated = await updatePelangganNomor(pelanggan.id, nomorBaru.trim());
+      setPelanggan(updated);
+      setShowNomor(false);
+      setFeedback("Nomor berhasil diubah!");
+      setTimeout(() => setFeedback(""), 2000);
+    } catch {
+      setFeedback("Gagal mengubah nomor.");
+      setTimeout(() => setFeedback(""), 2000);
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleDelete = async () => {
@@ -317,6 +344,15 @@ export default function DetailPelangganPage() {
               Ganti Nama
             </button>
             <button
+              onClick={handleBukaNomor}
+              className="w-full px-4 py-3 text-left text-sm font-medium text-stone-700 hover:bg-stone-50 flex items-center gap-3 active:bg-stone-100 transition-colors"
+            >
+              <svg className="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              Ganti Nomor
+            </button>
+            <button
               onClick={handleBukaDelete}
               className="w-full px-4 py-3 text-left text-sm font-medium text-red-600 hover:bg-red-50 flex items-center gap-3 active:bg-red-100 transition-colors"
             >
@@ -355,6 +391,42 @@ export default function DetailPelangganPage() {
               <button
                 onClick={handleRename}
                 disabled={!namaBaru.trim() || processing}
+                className="flex-1 py-3 rounded-xl text-sm font-semibold text-white bg-red-600 hover:bg-red-700 active:scale-95 transition-all duration-150 disabled:opacity-50"
+              >
+                {processing ? "Menyimpan..." : "Simpan"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showNomor && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-in fade-in" onClick={() => setShowNomor(false)}>
+          <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl animate-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold text-stone-800 mb-1">Ganti Nomor WA</h3>
+            <p className="text-sm text-stone-400 mb-4">Masukkan nomor WhatsApp baru</p>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={nomorBaru}
+              onChange={(e) => setNomorBaru(e.target.value)}
+              className="w-full p-3 rounded-xl border-2 border-stone-200 text-sm font-medium text-stone-800 placeholder-stone-300 focus:outline-none focus:border-red-400 transition-colors mb-4"
+              placeholder="Contoh: 08123456789"
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleNomorSave();
+              }}
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowNomor(false)}
+                className="flex-1 py-3 rounded-xl text-sm font-semibold text-stone-600 bg-stone-100 hover:bg-stone-200 active:scale-95 transition-all duration-150"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleNomorSave}
+                disabled={!nomorBaru.trim() || processing}
                 className="flex-1 py-3 rounded-xl text-sm font-semibold text-white bg-red-600 hover:bg-red-700 active:scale-95 transition-all duration-150 disabled:opacity-50"
               >
                 {processing ? "Menyimpan..." : "Simpan"}

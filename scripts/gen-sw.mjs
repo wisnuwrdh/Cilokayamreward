@@ -1,7 +1,27 @@
-const CACHE_NAME = "cilokreward-pages-v5";
-const ASSETS_CACHE = "cilokreward-assets-v5";
+import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const PRECACHE_URLS = [
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
+const ROOT = join(__dirname, "..");
+const BUILD_DIR = join(ROOT, ".next");
+const PUBLIC_DIR = join(ROOT, "public");
+
+function collectFiles(dir, prefix = "") {
+  const files = [];
+  if (!existsSync(dir)) return files;
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) {
+      files.push(...collectFiles(full, prefix + entry + "/"));
+    } else {
+      files.push(prefix + entry);
+    }
+  }
+  return files;
+}
+
+const staticPages = [
   "/",
   "/pelanggan/baru",
   "/pengaturan",
@@ -11,26 +31,27 @@ const PRECACHE_URLS = [
   "/manifest.json",
   "/icon-192.png",
   "/icon-512.png",
-  "/_next/static/chunks/01dkdyukbdpqq.js",
-  "/_next/static/chunks/03jxhtslrngii.js",
-  "/_next/static/chunks/05-c3ty_6dwfk.js",
-  "/_next/static/chunks/07-hzktxqjvzd.js",
-  "/_next/static/chunks/0cz1d0mv5g_q7.js",
-  "/_next/static/chunks/0sr6czg2qtejm.css",
-  "/_next/static/chunks/1-oy76x6jywj_.js",
-  "/_next/static/chunks/11oof8oxnxiv9.js",
-  "/_next/static/chunks/14mrh2-p_w84d.js",
-  "/_next/static/chunks/22xlangb_cs34.js",
-  "/_next/static/chunks/25tkev7uot6yj.js",
-  "/_next/static/chunks/2f1_cwu-pf-gz.js",
-  "/_next/static/chunks/2ntbhq8af3__i.js",
-  "/_next/static/chunks/2nykiepra7i1k.js",
-  "/_next/static/chunks/2q828aiw-scuv.js",
-  "/_next/static/chunks/turbopack-1hjhervvwwap8.js",
-  "/_next/static/Kc7xgW1yxzP2Mr9UdQp-i/_buildManifest.js",
-  "/_next/static/Kc7xgW1yxzP2Mr9UdQp-i/_clientMiddlewareManifest.js",
-  "/_next/static/Kc7xgW1yxzP2Mr9UdQp-i/_ssgManifest.js"
 ];
+
+const chunksDir = join(BUILD_DIR, "static", "chunks");
+const chunkFiles = collectFiles(chunksDir, "static/chunks/");
+
+const metaDir = join(BUILD_DIR, "static");
+const metaFiles = collectFiles(metaDir, "static/")
+  .filter((f) => !f.startsWith("static/chunks/") && !f.startsWith("static/media/"));
+
+const precacheUrls = [
+  ...staticPages,
+  ...chunkFiles.map((f) => "/_next/" + f),
+  ...metaFiles.map((f) => "/_next/" + f),
+];
+
+const urlsJson = JSON.stringify(precacheUrls, null, 2);
+
+const swContent = `const CACHE_NAME = "cilokreward-pages-v5";
+const ASSETS_CACHE = "cilokreward-assets-v5";
+
+const PRECACHE_URLS = ${urlsJson};
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -113,3 +134,7 @@ self.addEventListener("message", (event) => {
     self.skipWaiting();
   }
 });
+`;
+
+writeFileSync(join(PUBLIC_DIR, "sw.js"), swContent, "utf-8");
+console.log("sw.js generated with " + precacheUrls.length + " precache URLs");

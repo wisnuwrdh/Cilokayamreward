@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import InstallPrompt from "@/components/InstallPrompt";
 import SWRegister from "@/components/SWRegister";
+import ContextMenuBlocker from "@/components/ContextMenuBlocker";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -60,6 +61,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body className="min-h-full flex flex-col pb-16 safe-area-bottom">
+        <ContextMenuBlocker />
         <div className="max-w-lg mx-auto w-full px-4 safe-area-top">
           <Header />
         </div>
