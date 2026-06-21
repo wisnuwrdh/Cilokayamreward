@@ -1,4 +1,4 @@
-const CACHE_NAME = "cilokreward-v1";
+const CACHE_NAME = "cilokreward-v2";
 const ASSETS_CACHE = "cilokreward-assets-v1";
 
 self.addEventListener("install", () => {
