@@ -90,6 +90,7 @@ export async function catatPembelian(id: number): Promise<{
   const db = await getDB();
   const pelanggan = await db.get(STORE_PELANGGAN, id);
   if (!pelanggan) throw new Error('Pelanggan tidak ditemukan');
+  if (pelanggan.stempel_aktif >= 10) throw new Error('Stempel sudah penuh, tukar reward dulu');
 
   const now = new Date().toISOString();
   const stempelBaru = pelanggan.stempel_aktif + 1;

@@ -20,16 +20,16 @@ const PRECACHE_URLS = [
   "/_next/static/chunks/1-oy76x6jywj_.js",
   "/_next/static/chunks/11oof8oxnxiv9.js",
   "/_next/static/chunks/14mrh2-p_w84d.js",
-  "/_next/static/chunks/22xlangb_cs34.js",
+  "/_next/static/chunks/188-zy_spc34c.js",
   "/_next/static/chunks/25tkev7uot6yj.js",
-  "/_next/static/chunks/2f1_cwu-pf-gz.js",
   "/_next/static/chunks/2ntbhq8af3__i.js",
   "/_next/static/chunks/2nykiepra7i1k.js",
   "/_next/static/chunks/2q828aiw-scuv.js",
+  "/_next/static/chunks/3o02_-iri0vbq.js",
   "/_next/static/chunks/turbopack-1hjhervvwwap8.js",
-  "/_next/static/Kc7xgW1yxzP2Mr9UdQp-i/_buildManifest.js",
-  "/_next/static/Kc7xgW1yxzP2Mr9UdQp-i/_clientMiddlewareManifest.js",
-  "/_next/static/Kc7xgW1yxzP2Mr9UdQp-i/_ssgManifest.js"
+  "/_next/static/a7NkNf3sGXRCKyka77qYZ/_buildManifest.js",
+  "/_next/static/a7NkNf3sGXRCKyka77qYZ/_clientMiddlewareManifest.js",
+  "/_next/static/a7NkNf3sGXRCKyka77qYZ/_ssgManifest.js"
 ];
 
 self.addEventListener("install", (event) => {

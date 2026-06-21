@@ -54,6 +54,14 @@ export default function DetailPelangganPage() {
 
   const handleCatatPembelian = async () => {
     if (!pelanggan || processing) return;
+
+    if (pelanggan.stempel_aktif >= 10) {
+      setShowReward(true);
+      setProcessing(true);
+      setTimeout(() => setProcessing(false), 3000);
+      return;
+    }
+
     setProcessing(true);
     setFeedback("");
     try {
@@ -71,7 +79,7 @@ export default function DetailPelangganPage() {
       setFeedback("Gagal mencatat. Coba lagi.");
       setTimeout(() => setFeedback(""), 2000);
     } finally {
-      setProcessing(false);
+      setTimeout(() => setProcessing(false), 3000);
     }
   };
 
