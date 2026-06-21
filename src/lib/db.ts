@@ -162,3 +162,42 @@ export async function deletePelanggan(id: number): Promise<void> {
   const db = await getDB();
   await db.delete(STORE_PELANGGAN, id);
 }
+
+// --- WhatsApp Info Settings ---
+
+export async function saveWANomor(nomor: string): Promise<void> {
+  const db = await getDB();
+  await db.put(STORE_SETTINGS, { key: 'wa_nomor', value: nomor });
+}
+
+export async function getWANomor(): Promise<string | null> {
+  const db = await getDB();
+  const entry = await db.get(STORE_SETTINGS, 'wa_nomor');
+  return entry?.value ?? null;
+}
+
+export async function saveWAQR(file: File): Promise<void> {
+  const db = await getDB();
+  const dataUrl = await new Promise<string>((resolve) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.readAsDataURL(file);
+  });
+  await db.put(STORE_SETTINGS, { key: 'wa_qr', value: dataUrl });
+}
+
+export async function getWAQR(): Promise<string | null> {
+  const db = await getDB();
+  const entry = await db.get(STORE_SETTINGS, 'wa_qr');
+  return entry?.value ?? null;
+}
+
+export async function deleteWAQR(): Promise<void> {
+  const db = await getDB();
+  await db.delete(STORE_SETTINGS, 'wa_qr');
+}
+
+export async function deleteWANomor(): Promise<void> {
+  const db = await getDB();
+  await db.delete(STORE_SETTINGS, 'wa_nomor');
+}

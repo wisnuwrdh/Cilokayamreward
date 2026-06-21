@@ -73,13 +73,6 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col min-h-dvh">
-      <h1 className="text-2xl font-bold text-stone-800 mb-1">
-        CilokReward
-      </h1>
-      <p className="text-stone-500 text-sm mb-4">
-        {pelanggans.length} pelanggan terdaftar
-      </p>
-
       <div className="mb-4">
         <SearchBar value={search} onChange={setSearch} />
       </div>
