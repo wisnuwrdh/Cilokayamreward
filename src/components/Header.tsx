@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { getAllPelanggan } from "@/lib/db";
+
+const HIDDEN_ON = ["/pelanggan/baru", "/qris", "/pengaturan", "/wa"];
 
 export default function Header() {
   const router = useRouter();
+  const pathname = usePathname();
   const [count, setCount] = useState<number | null>(null);
 
   useEffect(() => {
@@ -22,6 +25,8 @@ export default function Header() {
       document.removeEventListener("visibilitychange", reload);
     };
   }, []);
+
+  if (HIDDEN_ON.includes(pathname)) return null;
 
   return (
     <header className="flex items-center justify-between gap-2 pt-2 pb-1">
