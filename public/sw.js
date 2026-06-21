@@ -1,5 +1,5 @@
-const CACHE_NAME = "cilokreward-pages-v5";
-const ASSETS_CACHE = "cilokreward-assets-v5";
+const CACHE_NAME = "cilokreward-pages-v6";
+const ASSETS_CACHE = "cilokreward-assets-v6";
 
 const PRECACHE_URLS = [
   "/",
