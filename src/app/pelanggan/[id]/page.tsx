@@ -133,7 +133,7 @@ export default function DetailPelangganPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl p-5 border border-red-100 mb-4">
+      <div className="bg-orange-50 rounded-2xl p-5 border border-red-100 mb-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-bold text-stone-700">Stempel Digital</h2>
           <span className="text-sm font-semibold text-stone-400">
@@ -198,7 +198,7 @@ export default function DetailPelangganPage() {
         </button>
       )}
 
-      <div className="bg-white rounded-2xl p-5 border border-red-100">
+      <div className="bg-orange-50 rounded-2xl p-5 border border-red-100">
         <h2 className="text-base font-bold text-stone-700 mb-3">
           Riwayat Pembelian
         </h2>

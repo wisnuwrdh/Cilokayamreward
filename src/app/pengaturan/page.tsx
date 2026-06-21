@@ -50,7 +50,7 @@ export default function PengaturanPage() {
       </div>
 
       <div className="space-y-4">
-        <div className="bg-white rounded-2xl p-5 border border-red-100">
+        <div className="bg-orange-50 rounded-2xl p-5 border border-red-100">
           <h2 className="text-base font-bold text-stone-700 mb-1">
             Export Data Pelanggan
           </h2>
@@ -79,7 +79,7 @@ export default function PengaturanPage() {
           )}
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-red-100">
+        <div className="bg-orange-50 rounded-2xl p-5 border border-red-100">
           <h2 className="text-base font-bold text-stone-700 mb-1">
             Tentang Aplikasi
           </h2>
