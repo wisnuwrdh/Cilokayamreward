@@ -1,8 +1,33 @@
-const CACHE_NAME = "cilokreward-v3";
-const ASSETS_CACHE = "cilokreward-assets-v1";
+const CACHE_NAME = "cilokreward-pages-v4";
+const ASSETS_CACHE = "cilokreward-assets-v4";
 
-self.addEventListener("install", () => {
-  self.skipWaiting();
+const PRECACHE_URLS = [
+  "/",
+  "/pelanggan/baru",
+  "/pengaturan",
+  "/qris",
+  "/wa",
+  "/offline.html",
+  "/manifest.json",
+  "/icon-192.png",
+  "/icon-512.png",
+];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return Promise.allSettled(
+        PRECACHE_URLS.map((url) =>
+          fetch(url, { cache: "no-cache" })
+            .then((res) => {
+              if (res.ok) return cache.put(url, res);
+              return Promise.reject(`fetch failed: ${url}`);
+            })
+            .catch((err) => console.warn("SW precache skip:", url, err))
+        )
+      );
+    }).then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener("activate", (event) => {
@@ -13,10 +38,13 @@ self.addEventListener("activate", (event) => {
           .filter((key) => key !== CACHE_NAME && key !== ASSETS_CACHE)
           .map((key) => caches.delete(key))
       )
-    )
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
+
+function isNavigationRequest(request) {
+  return request.mode === "navigate" || request.destination === "document";
+}
 
 self.addEventListener("fetch", (event) => {
   const { request } = event;
@@ -26,35 +54,36 @@ self.addEventListener("fetch", (event) => {
   if (!url.protocol.startsWith("http")) return;
   if (url.origin !== self.location.origin) return;
 
-  if (url.pathname.match(/\.(js|css|png|jpg|jpeg|webp|svg|ico|woff2|woff|ttf)(\?.*)?$/)) {
+  if (isNavigationRequest(request)) {
     event.respondWith(
-      caches.open(ASSETS_CACHE).then((cache) =>
-        cache.match(request).then((cached) => {
-          const fetchPromise = fetch(request).then((response) => {
-            if (response.ok) cache.put(request, response.clone());
-            return response;
-          });
-          return cached || fetchPromise;
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
         })
-      )
+        .catch(() =>
+          caches.match(request).then((cached) => {
+            if (cached) return cached;
+            return caches.match("/offline.html");
+          })
+        )
     );
     return;
   }
 
   event.respondWith(
-    fetch(request)
-      .then((response) => {
-        if (response.ok) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-        }
-        return response;
+    caches.open(ASSETS_CACHE).then((cache) =>
+      cache.match(request).then((cached) => {
+        const fetchPromise = fetch(request).then((response) => {
+          if (response.ok) cache.put(request, response.clone());
+          return response;
+        }).catch(() => cached);
+        return cached || fetchPromise;
       })
-      .catch(() =>
-        caches.match(request).then(
-          (cached) => cached || new Response("Offline", { status: 503 })
-        )
-      )
+    )
   );
 });
 

@@ -7,10 +7,13 @@ import {
   catatPembelian,
   tukarReward,
   batalkanPembelianTerakhir,
+  updatePelangganNama,
+  deletePelanggan,
 } from "@/lib/db";
 import type { Pelanggan } from "@/lib/types";
 import StempelProgress from "@/components/StempelProgress";
 import RewardModal from "@/components/RewardModal";
+import ConfirmModal from "@/components/ConfirmModal";
 
 export default function DetailPelangganPage() {
   const { id } = useParams<{ id: string }>();
@@ -21,6 +24,11 @@ export default function DetailPelangganPage() {
   const [showReward, setShowReward] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [recentBell, setRecentBell] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showRename, setShowRename] = useState(false);
+  const [namaBaru, setNamaBaru] = useState("");
+  const [showBatalConfirm, setShowBatalConfirm] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -81,14 +89,9 @@ export default function DetailPelangganPage() {
     }
   };
 
-  const handleBatalkan = async () => {
+  const lakukanBatalkan = async () => {
     if (!pelanggan || processing) return;
-    if (pelanggan.riwayat_beli.length === 0) return;
-    const ok = confirm(
-      "Batalkan pembelian terakhir untuk " + pelanggan.nama + "?"
-    );
-    if (!ok) return;
-
+    setShowBatalConfirm(false);
     setProcessing(true);
     try {
       const updated = await batalkanPembelianTerakhir(pelanggan.id);
@@ -99,6 +102,55 @@ export default function DetailPelangganPage() {
       setFeedback("Gagal membatalkan.");
       setTimeout(() => setFeedback(""), 2000);
     } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleBatalkan = () => {
+    if (!pelanggan || processing) return;
+    if (pelanggan.riwayat_beli.length === 0) return;
+    setShowBatalConfirm(true);
+  };
+
+  const handleBukaRename = () => {
+    if (!pelanggan) return;
+    setShowSettings(false);
+    setNamaBaru(pelanggan.nama);
+    setShowRename(true);
+  };
+
+  const handleRename = async () => {
+    if (!pelanggan || !namaBaru.trim()) return;
+    setProcessing(true);
+    try {
+      const updated = await updatePelangganNama(pelanggan.id, namaBaru.trim());
+      setPelanggan(updated);
+      setShowRename(false);
+      setFeedback("Nama berhasil diubah!");
+      setTimeout(() => setFeedback(""), 2000);
+    } catch {
+      setFeedback("Gagal mengubah nama.");
+      setTimeout(() => setFeedback(""), 2000);
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleBukaDelete = () => {
+    setShowSettings(false);
+    setShowDeleteConfirm(true);
+  };
+
+  const handleDelete = async () => {
+    if (!pelanggan) return;
+    setShowDeleteConfirm(false);
+    setProcessing(true);
+    try {
+      await deletePelanggan(pelanggan.id);
+      router.push("/");
+    } catch {
+      setFeedback("Gagal menghapus pelanggan.");
+      setTimeout(() => setFeedback(""), 2000);
       setProcessing(false);
     }
   };
@@ -128,10 +180,20 @@ export default function DetailPelangganPage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <h1 className="text-2xl font-bold text-stone-800 truncate">{pelanggan.nama}</h1>
           <p className="text-sm text-stone-400">{pelanggan.nomor_wa}</p>
         </div>
+        <button
+          onClick={() => setShowSettings(true)}
+          className="p-2 text-stone-400 hover:text-stone-600 active:scale-90 transition-all duration-150"
+          aria-label="Pengaturan pelanggan"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
       </div>
 
       <div className="bg-white rounded-2xl p-5 border-2 border-red-200 mb-4">
@@ -235,6 +297,92 @@ export default function DetailPelangganPage() {
           nama={pelanggan.nama}
           onTukar={handleTukarReward}
           onClose={() => setShowReward(false)}
+        />
+      )}
+
+      {showSettings && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-in fade-in" onClick={() => setShowSettings(false)}>
+          <div className="bg-white rounded-2xl w-full max-w-xs shadow-xl animate-in zoom-in-95 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="p-4 border-b border-stone-100">
+              <h3 className="text-base font-bold text-stone-800">Pengaturan</h3>
+              <p className="text-sm text-stone-400">{pelanggan.nama}</p>
+            </div>
+            <button
+              onClick={handleBukaRename}
+              className="w-full px-4 py-3 text-left text-sm font-medium text-stone-700 hover:bg-stone-50 flex items-center gap-3 active:bg-stone-100 transition-colors"
+            >
+              <svg className="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Ganti Nama
+            </button>
+            <button
+              onClick={handleBukaDelete}
+              className="w-full px-4 py-3 text-left text-sm font-medium text-red-600 hover:bg-red-50 flex items-center gap-3 active:bg-red-100 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Hapus
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showRename && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-in fade-in" onClick={() => setShowRename(false)}>
+          <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl animate-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold text-stone-800 mb-1">Ganti Nama</h3>
+            <p className="text-sm text-stone-400 mb-4">Masukkan nama baru</p>
+            <input
+              type="text"
+              value={namaBaru}
+              onChange={(e) => setNamaBaru(e.target.value)}
+              className="w-full p-3 rounded-xl border-2 border-stone-200 text-sm font-medium text-stone-800 placeholder-stone-300 focus:outline-none focus:border-red-400 transition-colors mb-4"
+              placeholder="Nama pelanggan"
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleRename();
+              }}
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowRename(false)}
+                className="flex-1 py-3 rounded-xl text-sm font-semibold text-stone-600 bg-stone-100 hover:bg-stone-200 active:scale-95 transition-all duration-150"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleRename}
+                disabled={!namaBaru.trim() || processing}
+                className="flex-1 py-3 rounded-xl text-sm font-semibold text-white bg-red-600 hover:bg-red-700 active:scale-95 transition-all duration-150 disabled:opacity-50"
+              >
+                {processing ? "Menyimpan..." : "Simpan"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showBatalConfirm && (
+        <ConfirmModal
+          title="Batalkan Pembelian"
+          message={`Batalkan pembelian terakhir untuk ${pelanggan.nama}?`}
+          confirmLabel="Batalkan"
+          cancelLabel="Tutup"
+          onConfirm={lakukanBatalkan}
+          onCancel={() => setShowBatalConfirm(false)}
+        />
+      )}
+
+      {showDeleteConfirm && (
+        <ConfirmModal
+          title="Hapus Pelanggan"
+          message={`Yakin hapus ${pelanggan.nama}? Semua data akan hilang.`}
+          confirmLabel="Hapus"
+          cancelLabel="Batal"
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteConfirm(false)}
         />
       )}
     </div>

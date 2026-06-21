@@ -35,8 +35,14 @@ const navItems = [
   { href: "/pengaturan", label: "Atur", icon: GearIcon },
 ];
 
+const HIDDEN_ON = ["/qris", "/wa", "/pelanggan/baru", "/pengaturan"];
+const HIDDEN_PREFIX = ["/pelanggan/"];
+
 export default function Navbar() {
   const pathname = usePathname();
+
+  if (HIDDEN_ON.includes(pathname)) return null;
+  if (HIDDEN_PREFIX.some((p) => pathname.startsWith(p))) return null;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-red-200 safe-area-bottom">

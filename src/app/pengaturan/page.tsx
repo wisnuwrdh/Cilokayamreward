@@ -14,6 +14,7 @@ import {
   getWANomor,
   deleteWANomor,
 } from "@/lib/db";
+import ConfirmModal from "@/components/ConfirmModal";
 
 type Tab = "qris" | "wa";
 
@@ -37,6 +38,8 @@ export default function PengaturanPage() {
   const [waQrUploading, setWaQrUploading] = useState(false);
   const [waNomorSaving, setWaNomorSaving] = useState(false);
   const waFileRef = useRef<HTMLInputElement>(null);
+  const [showQrisConfirm, setShowQrisConfirm] = useState(false);
+  const [showWaqrConfirm, setShowWaqrConfirm] = useState(false);
 
   useEffect(() => {
     getQRIS().then((data) => {
@@ -77,8 +80,8 @@ export default function PengaturanPage() {
     }
   };
 
-  const handleQRISDelete = async () => {
-    if (!confirm("Hapus QRIS yang tersimpan?")) return;
+  const handleQRISDeleteConfirm = async () => {
+    setShowQrisConfirm(false);
     try {
       await deleteQRIS();
       setQrisPreview(null);
@@ -121,8 +124,8 @@ export default function PengaturanPage() {
     }
   };
 
-  const handleWAQRDelete = async () => {
-    if (!confirm("Hapus QR WhatsApp yang tersimpan?")) return;
+  const handleWAQRDeleteConfirm = async () => {
+    setShowWaqrConfirm(false);
     try {
       await deleteWAQR();
       setWaQrPreview(null);
@@ -235,7 +238,7 @@ export default function PengaturanPage() {
                     Ganti QRIS
                   </button>
                   <button
-                    onClick={handleQRISDelete}
+                    onClick={() => setShowQrisConfirm(true)}
                     className="py-3 px-4 border-2 border-red-200 text-red-600 font-bold text-sm rounded-xl hover:bg-red-50 active:scale-[0.98] transition-all duration-150"
                   >
                     Hapus
@@ -351,7 +354,7 @@ export default function PengaturanPage() {
                     Ganti QR WA
                   </button>
                   <button
-                    onClick={handleWAQRDelete}
+                    onClick={() => setShowWaqrConfirm(true)}
                     className="py-3 px-4 border-2 border-green-200 text-green-600 font-bold text-sm rounded-xl hover:bg-green-50 active:scale-[0.98] transition-all duration-150"
                   >
                     Hapus
@@ -436,6 +439,28 @@ export default function PengaturanPage() {
           </p>
         </div>
       </div>
+
+      {showQrisConfirm && (
+        <ConfirmModal
+          title="Hapus QRIS"
+          message="Hapus QRIS yang tersimpan?"
+          confirmLabel="Hapus"
+          cancelLabel="Batal"
+          onConfirm={handleQRISDeleteConfirm}
+          onCancel={() => setShowQrisConfirm(false)}
+        />
+      )}
+
+      {showWaqrConfirm && (
+        <ConfirmModal
+          title="Hapus QR WhatsApp"
+          message="Hapus QR WhatsApp yang tersimpan?"
+          confirmLabel="Hapus"
+          cancelLabel="Batal"
+          onConfirm={handleWAQRDeleteConfirm}
+          onCancel={() => setShowWaqrConfirm(false)}
+        />
+      )}
     </div>
   );
 }
