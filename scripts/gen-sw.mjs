@@ -101,12 +101,12 @@ self.addEventListener("fetch", (event) => {
         .then((response) => {
           if (response.ok) {
             const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+            caches.open(CACHE_NAME).then((cache) => cache.put(url.pathname, clone));
           }
           return response;
         })
         .catch(() =>
-          caches.match(request).then((cached) => {
+          caches.match(request, { ignoreSearch: true }).then((cached) => {
             if (cached) return cached;
             return caches.match("/offline.html");
           })

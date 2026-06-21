@@ -28,9 +28,9 @@ const PRECACHE_URLS = [
   "/_next/static/chunks/2q828aiw-scuv.js",
   "/_next/static/chunks/33s71yzbhbl7m.js",
   "/_next/static/chunks/turbopack-1hjhervvwwap8.js",
-  "/_next/static/Qp-XPlTTYIAEVI3l35gww/_buildManifest.js",
-  "/_next/static/Qp-XPlTTYIAEVI3l35gww/_clientMiddlewareManifest.js",
-  "/_next/static/Qp-XPlTTYIAEVI3l35gww/_ssgManifest.js"
+  "/_next/static/JWMOcCbvoDfIHu1e04PzO/_buildManifest.js",
+  "/_next/static/JWMOcCbvoDfIHu1e04PzO/_clientMiddlewareManifest.js",
+  "/_next/static/JWMOcCbvoDfIHu1e04PzO/_ssgManifest.js"
 ];
 
 self.addEventListener("install", (event) => {
@@ -80,12 +80,12 @@ self.addEventListener("fetch", (event) => {
         .then((response) => {
           if (response.ok) {
             const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+            caches.open(CACHE_NAME).then((cache) => cache.put(url.pathname, clone));
           }
           return response;
         })
         .catch(() =>
-          caches.match(request).then((cached) => {
+          caches.match(request, { ignoreSearch: true }).then((cached) => {
             if (cached) return cached;
             return caches.match("/offline.html");
           })
