@@ -3,6 +3,7 @@ const ASSETS_CACHE = "cilokreward-assets-v5";
 
 const PRECACHE_URLS = [
   "/",
+  "/pelanggan",
   "/pelanggan/baru",
   "/pengaturan",
   "/qris",
@@ -12,7 +13,6 @@ const PRECACHE_URLS = [
   "/icon-192.png",
   "/icon-512.png",
   "/_next/static/chunks/01dkdyukbdpqq.js",
-  "/_next/static/chunks/03jxhtslrngii.js",
   "/_next/static/chunks/05-c3ty_6dwfk.js",
   "/_next/static/chunks/07-hzktxqjvzd.js",
   "/_next/static/chunks/0cz1d0mv5g_q7.js",
@@ -20,16 +20,17 @@ const PRECACHE_URLS = [
   "/_next/static/chunks/1-oy76x6jywj_.js",
   "/_next/static/chunks/11oof8oxnxiv9.js",
   "/_next/static/chunks/14mrh2-p_w84d.js",
-  "/_next/static/chunks/188-zy_spc34c.js",
+  "/_next/static/chunks/1crakm2anrsi_.js",
   "/_next/static/chunks/25tkev7uot6yj.js",
+  "/_next/static/chunks/2ft20mknf1xm3.js",
   "/_next/static/chunks/2ntbhq8af3__i.js",
   "/_next/static/chunks/2nykiepra7i1k.js",
   "/_next/static/chunks/2q828aiw-scuv.js",
-  "/_next/static/chunks/3o02_-iri0vbq.js",
+  "/_next/static/chunks/33s71yzbhbl7m.js",
   "/_next/static/chunks/turbopack-1hjhervvwwap8.js",
-  "/_next/static/a7NkNf3sGXRCKyka77qYZ/_buildManifest.js",
-  "/_next/static/a7NkNf3sGXRCKyka77qYZ/_clientMiddlewareManifest.js",
-  "/_next/static/a7NkNf3sGXRCKyka77qYZ/_ssgManifest.js"
+  "/_next/static/Qp-XPlTTYIAEVI3l35gww/_buildManifest.js",
+  "/_next/static/Qp-XPlTTYIAEVI3l35gww/_clientMiddlewareManifest.js",
+  "/_next/static/Qp-XPlTTYIAEVI3l35gww/_ssgManifest.js"
 ];
 
 self.addEventListener("install", (event) => {

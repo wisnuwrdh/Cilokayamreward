@@ -23,6 +23,7 @@ function collectFiles(dir, prefix = "") {
 
 const staticPages = [
   "/",
+  "/pelanggan",
   "/pelanggan/baru",
   "/pengaturan",
   "/qris",

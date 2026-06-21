@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { getAllPelanggan } from "@/lib/db";
 
-const HIDDEN_ON = ["/pelanggan/baru", "/qris", "/pengaturan", "/wa"];
-const HIDDEN_PREFIX = ["/pelanggan/"];
+const HIDDEN_ON = ["/pelanggan/baru", "/qris", "/pengaturan", "/wa", "/pelanggan"];
 
 export default function Header() {
   const router = useRouter();
@@ -28,7 +27,7 @@ export default function Header() {
   }, []);
 
   if (HIDDEN_ON.includes(pathname)) return null;
-  if (HIDDEN_PREFIX.some((p) => pathname.startsWith(p))) return null;
+  if (pathname.startsWith("/pelanggan/")) return null;
 
   return (
     <header className="flex items-center justify-between gap-2 pt-2 pb-1">

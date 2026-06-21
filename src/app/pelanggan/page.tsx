@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { Suspense, useEffect, useState, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   getPelangganById,
   catatPembelian,
@@ -16,8 +16,25 @@ import StempelProgress from "@/components/StempelProgress";
 import RewardModal from "@/components/RewardModal";
 import ConfirmModal from "@/components/ConfirmModal";
 
-export default function DetailPelangganPage() {
-  const { id } = useParams<{ id: string }>();
+export default function Page() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <Content />
+    </Suspense>
+  );
+}
+
+function LoadingSpinner() {
+  return (
+    <div className="flex items-center justify-center min-h-dvh">
+      <div className="w-8 h-8 border-4 border-red-200 border-t-red-600 rounded-full animate-spin" />
+    </div>
+  );
+}
+
+function Content() {
+  const searchParams = useSearchParams();
+  const id = searchParams?.get("id") ?? "";
   const router = useRouter();
   const [pelanggan, setPelanggan] = useState<Pelanggan | null>(null);
   const [loading, setLoading] = useState(true);
@@ -207,7 +224,7 @@ export default function DetailPelangganPage() {
     <div className="flex flex-col min-h-dvh pb-4">
       <div className="flex items-center gap-3 mb-6">
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push("/")}
           className="p-2 -ml-2 text-stone-500 hover:text-stone-800 active:scale-90 transition-all duration-150"
           aria-label="Kembali"
         >

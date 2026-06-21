@@ -19,7 +19,7 @@ const PelangganCard = memo(function PelangganCard({
 }: PelangganCardProps) {
   return (
     <a
-      href={`/pelanggan/${id}`}
+      href={`/pelanggan?id=${id}`}
       className="block bg-white rounded-xl p-4 border-2 border-red-200 hover:border-red-500 hover:shadow-md active:scale-[0.98] transition-all duration-150"
     >
       <div className="flex items-center justify-between">
