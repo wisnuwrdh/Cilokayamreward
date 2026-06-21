@@ -84,8 +84,8 @@ export default function PengaturanPage() {
             Tentang Aplikasi
           </h2>
           <p className="text-sm text-stone-400">
-            Cilok Bapak v1.0 — Aplikasi loyalitas pelanggan untuk pedagang
-            cilok. Data disimpan lokal di HP, tidak dikirim ke server mana pun.
+            Sang Penguasa Rasa v1.0 — Aplikasi loyalitas pelanggan. Data
+            disimpan lokal di HP, tidak dikirim ke server mana pun.
           </p>
         </div>
 

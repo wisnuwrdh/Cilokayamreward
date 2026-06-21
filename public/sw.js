@@ -1,5 +1,5 @@
-const CACHE_NAME = "cilok-bapak-v2";
-const IMMUTABLE_CACHE = "cilok-bapak-assets-v2";
+const CACHE_NAME = "sang-penguasa-rasa-v1";
+const IMMUTABLE_CACHE = "sang-penguasa-rasa-assets-v1";
 
 self.addEventListener("install", () => {
   self.skipWaiting();
@@ -24,10 +24,8 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
 
-  // Skip non-GET and non-HTTP(S)
   if (!url.protocol.startsWith("http")) return;
 
-  // Cache-first for hashed assets (JS, CSS, images, fonts)
   if (url.pathname.match(/\.(js|css|png|jpg|jpeg|webp|svg|ico|woff2)(\?.*)?$/)) {
     event.respondWith(
       caches.open(IMMUTABLE_CACHE).then((cache) =>
@@ -43,7 +41,6 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Network-first for HTML, pages, manifest
   event.respondWith(
     fetch(request)
       .then((response) => {

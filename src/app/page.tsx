@@ -53,6 +53,18 @@ export default function DashboardPage() {
     loadData();
   }, [loadData]);
 
+  useEffect(() => {
+    const reload = () => {
+      if (document.visibilityState === "visible") loadData();
+    };
+    window.addEventListener("focus", loadData);
+    document.addEventListener("visibilitychange", reload);
+    return () => {
+      window.removeEventListener("focus", loadData);
+      document.removeEventListener("visibilitychange", reload);
+    };
+  }, [loadData]);
+
   const filtered = pelanggans.filter((p) =>
     p.nama.toLowerCase().includes(deferredSearch.toLowerCase())
   );
@@ -62,7 +74,7 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col min-h-dvh">
       <h1 className="text-2xl font-bold text-stone-800 mb-1">
-        Cilok Bapak
+        Sang Penguasa Rasa
       </h1>
       <p className="text-stone-500 text-sm mb-4">
         {pelanggans.length} pelanggan terdaftar
@@ -98,7 +110,7 @@ export default function DashboardPage() {
                     Belum ada pelanggan
                   </h2>
                   <p className="text-stone-400 text-sm mb-4">
-                    Tambahkan pelanggan pertama saat mereka beli cilok
+                    Tambahkan pelanggan pertama saat mereka beli
                   </p>
                   <button
                     onClick={() => router.push("/pelanggan/baru")}

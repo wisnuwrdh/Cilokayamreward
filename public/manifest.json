@@ -1,11 +1,11 @@
 {
-  "name": "Cilok Bapak",
-  "short_name": "Cilok",
-  "description": "Aplikasi loyalitas pelanggan pedagang cilok",
+  "name": "Sang Penguasa Rasa",
+  "short_name": "Penguasa Rasa",
+  "description": "Aplikasi loyalitas pelanggan Sang Penguasa Rasa",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#FEF2F2",
+  "background_color": "#FFFFFF",
   "theme_color": "#DC2626",
   "icons": [
     {

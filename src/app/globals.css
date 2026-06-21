@@ -5,7 +5,7 @@
   --color-on-primary: #FFFFFF;
   --color-secondary: #F87171;
   --color-accent: #A16207;
-  --color-background: #FEF2F2;
+  --color-background: #FFFFFF;
   --color-foreground: #450A0A;
   --color-muted: #F0EDF1;
   --color-border: #FECACA;
@@ -26,7 +26,7 @@ html {
 }
 
 body {
-  background: #FEF2F2;
+  background: #FFFFFF;
   color: #450A0A;
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   font-size: 16px;
